@@ -180,7 +180,9 @@ class OutGoingStockAddProductToCartFragment : Fragment() {
                 cost = product.cost ?: 0.0,
                 subTotal = total,
                 customerId = customerId,
-                productBatchList = batchList
+                productBatchList = batchList,
+                isAsset = product.isAsset,
+                type = product.type,
             ).apply {
                 product.applicableTaxes?.let {
                     applicableTaxes = it

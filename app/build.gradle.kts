@@ -28,8 +28,8 @@ android {
         applicationId = "com.lfsolutions.retail"
         minSdk = 24
         targetSdk = 35
-        versionCode = 192
-        versionName = "0.2.192"
+        versionCode = 193
+        versionName = "0.2.193"
 
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
     }
@@ -37,9 +37,11 @@ android {
     buildTypes {
         getByName("debug") {
             buildConfigField("String", "BASE_URL", "\"http://rtlconnect.net/MyBossTest/\"")
+            buildConfigField("String", "TENANT", "\"slc\"")
         }
         getByName("release"){
             buildConfigField("String", "BASE_URL", "\"http://myboss.rtlconnect.net/\"")
+            buildConfigField("String", "TENANT", "\"slc\"")
             isMinifyEnabled = false
             proguardFiles(
                 getDefaultProguardFile("proguard-android-optimize.txt"),

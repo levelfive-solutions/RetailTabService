@@ -207,12 +207,24 @@ class IncomingStockSummaryFragment : Fragment() {
             requireActivity().finish()
         }
 
+
+
         mBinding.btnComplete.setOnClickListener {
-            if (serialBatchVerified().not()) {
+
+           /* if (serialBatchVerified().not()) {
+                Notify.toastLong("Please add serial numbers")
+                return@setOnClickListener
+            }*/
+
+            if (isSerialEquipment()) {
                 Notify.toastLong("Please add serial numbers")
                 return@setOnClickListener
             }
 
+            if (serialBatchVerified().not()) {
+                Notify.toastLong("Serial Number and quantity should be equal")
+                return@setOnClickListener
+            }
 
             if (Main.app.getInComingStockTransferRequestObject().date == null ||
                 Main.app.getInComingStockTransferRequestObject().date?.isBlank() == true
@@ -268,10 +280,19 @@ class IncomingStockSummaryFragment : Fragment() {
             ).execute()
     }
 
+    private fun isSerialEquipment():Boolean{
+        Main.app.getOutGoingStockTransferRequestObject().stockTransferDetails.forEach{ product->
+            if (product.isAsset==true && product.type=="S" && product.productBatchList.isNullOrEmpty()) {
+                return true
+            }
+        }
+        return false
+    }
+
     private fun serialBatchVerified(): Boolean {
         var verified = true
         Main.app.getInComingStockTransferRequestObject().stockTransferDetails.forEach {
-            val serial = it.isAsset == true || it.type.equals("S")
+            val serial = it.isAsset == true && it.type.equals("S")
             val notBatched = it.productBatchList == null || it.productBatchList?.size == 0
             val batchedAndQtyNotMatch =
                 it.productBatchList != null && it.qty.toInt() != it.productBatchList?.size

@@ -144,8 +144,14 @@ class OutGoingStockFragment : Fragment() {
             Main.app.getOutGoingStockTransferRequestObject().remarks =
                 binding.remarks.text.toString()
 
-            if (serialBatchVerified().not()) {
+
+            if (isSerialEquipment()) {
                 Notify.toastLong("Please add serial numbers")
+                return@setOnClickListener
+            }
+
+            if (serialBatchVerified().not()) {
+                Notify.toastLong("Serial Number and quantity should be equal")
                 return@setOnClickListener
             }
 
@@ -191,6 +197,7 @@ class OutGoingStockFragment : Fragment() {
                                 subTotal = total,
                                 customerId = customerId,
                                 isAsset = product.isAsset,
+                                type = product.type,
                                 productBatchList = product.productBatchList
                             ).apply {
                                 product.applicableTaxes?.let {
@@ -211,17 +218,33 @@ class OutGoingStockFragment : Fragment() {
             ).execute()
     }
 
+    private fun isSerialEquipment():Boolean{
+        Main.app.getOutGoingStockTransferRequestObject().stockTransferDetails.forEach{ product->
+            if (product.isAsset==true && product.type=="S" && product.productBatchList.isNullOrEmpty()) {
+                return true
+            }
+        }
+        return false
+    }
+
     private fun serialBatchVerified(): Boolean {
         var verified = true
         Main.app.getOutGoingStockTransferRequestObject().stockTransferDetails.forEach {
-            val serial = it.isAsset == true || it.type.equals("S")
+            println("Product:=${it}")
+            val serial = it.isAsset == true && it.type.equals("S")
             val notBatched = it.productBatchList == null || it.productBatchList?.size == 0
-            val batchedAndQtyNotMatch =
-                it.productBatchList != null && it.qty.toInt() != it.productBatchList?.size
+            val batchedAndQtyNotMatch = it.productBatchList != null && it.qty.toInt() != it.productBatchList?.size
             if (serial && (notBatched || batchedAndQtyNotMatch)) {
                 verified = false
             }
+            /*if (product.isSerialEquipment() && mBinding.txtQty.text.toString()
+                    .toInt() != selectedSerialNumbers.size
+            ) {
+                Notify.toastLong("Serial Number and quantity should be equal")
+                return@setOnClickListener
+            }*/
         }
+        println("verified:=$verified")
         return verified
     }
 
