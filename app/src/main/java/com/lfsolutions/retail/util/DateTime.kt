@@ -120,8 +120,6 @@ object DateTime {
     }
 
 
-
-
     fun format(STAMP: Date?, FORMAT: String?): String? {
         val from = SimpleDateFormat(FORMAT)
         var formattedDate: String? = null
@@ -203,7 +201,49 @@ object DateTime {
         return sdf.format(Date())
     }
 
-    fun getStartAndEndDate():Pair<String,String>{
+    fun getStartAndEndDate(): Pair<String, String> {
+        val isoFormat = SimpleDateFormat("yyyy-MM-dd", Locale.getDefault())
+        isoFormat.timeZone = TimeZone.getTimeZone("UTC")
+
+        // Current date
+        val currentCalendar = Calendar.getInstance(TimeZone.getTimeZone("UTC"))
+        val currentDate = isoFormat.format(currentCalendar.time)
+
+        // One month back
+        val pastCalendar = Calendar.getInstance(TimeZone.getTimeZone("UTC"))
+        pastCalendar.add(Calendar.MONTH, -1)
+        val oneMonthBack = isoFormat.format(pastCalendar.time)
+
+        return Pair(currentDate, oneMonthBack)
+    }
+
+
+    /*fun getStartAndEndDate(): Pair<String, String> {
+        val isoFormat = SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss'Z'", Locale.getDefault())
+        isoFormat.timeZone = TimeZone.getTimeZone("UTC")
+
+        // Current date - set to start of the day (00:00:00)
+        val currentCalendar = Calendar.getInstance(TimeZone.getTimeZone("UTC"))
+        currentCalendar.set(Calendar.HOUR_OF_DAY, 0)
+        currentCalendar.set(Calendar.MINUTE, 0)
+        currentCalendar.set(Calendar.SECOND, 0)
+        currentCalendar.set(Calendar.MILLISECOND, 0)
+        val currentDate = isoFormat.format(currentCalendar.time)
+
+        // One month back - also set to start of the day (00:00:00)
+        val pastCalendar = Calendar.getInstance(TimeZone.getTimeZone("UTC"))
+        pastCalendar.add(Calendar.MONTH, -1)
+        pastCalendar.set(Calendar.HOUR_OF_DAY, 0)
+        pastCalendar.set(Calendar.MINUTE, 0)
+        pastCalendar.set(Calendar.SECOND, 0)
+        pastCalendar.set(Calendar.MILLISECOND, 0)
+        val oneMonthBack = isoFormat.format(pastCalendar.time)
+
+        return Pair(currentDate, oneMonthBack)
+    }*/
+
+
+   /* fun getStartAndEndDate():Pair<String,String>{
         val isoFormat = SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss'Z'", Locale.getDefault())
         isoFormat.timeZone = TimeZone.getTimeZone("UTC")
 
@@ -217,7 +257,7 @@ object DateTime {
         val oneMonthBack = isoFormat.format(pastCalendar.time)
 
         return Pair(currentDate, oneMonthBack)
-    }
+    }*/
 
     @JvmStatic
     val currentDateTime: String

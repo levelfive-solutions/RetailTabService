@@ -133,7 +133,7 @@ class HistoryFilterSheet : BottomSheetDialogFragment() {
     private fun getStartDate() {
         DateTime.showDatePicker(requireActivity(), object : DateTime.OnDatePickedCallback {
             override fun onDateSelected(year: String, month: String, day: String) {
-                startDate = year + "-" + month + "-" + day + "T00:00:00Z"
+                startDate = year + "-" + month + "-" + day /*+ "T00:00:00Z"*/
                 getEndDate()
             }
         })
@@ -142,7 +142,7 @@ class HistoryFilterSheet : BottomSheetDialogFragment() {
     private fun getEndDate() {
         DateTime.showDatePicker(requireActivity(), object : DateTime.OnDatePickedCallback {
             override fun onDateSelected(year: String, month: String, day: String) {
-                endDate = year + "-" + month + "-" + day + "T00:00:00Z"
+                endDate = year + "-" + month + "-" + day /*+ "T00:00:00Z"*/
                 setSelectedDateData()
             }
         })
