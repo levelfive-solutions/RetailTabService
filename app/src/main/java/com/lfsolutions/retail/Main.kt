@@ -13,6 +13,8 @@ import com.lfsolutions.retail.model.sale.order.SaleOrderRequest
 import com.lfsolutions.retail.model.service.ServiceFormBody
 import com.lfsolutions.retail.ui.delivery.order.DeliveryOrderDTO
 import com.lfsolutions.retail.ui.login.LoginActivity
+import com.lfsolutions.retail.util.Api.APP_BASE_URL
+import com.lfsolutions.retail.util.Api.APP_TENANT
 import com.lfsolutions.retail.util.AppSession
 import com.lfsolutions.retail.util.Constants
 
@@ -39,6 +41,14 @@ class Main : Application() {
 
     fun getBaseUrl(): String {
         return AppSession[Constants.baseUrl]
+    }
+
+    fun getTenant(): String {
+        return AppSession.get(key = Constants.TENANT, defaultValue = APP_TENANT)?:APP_TENANT
+    }
+
+    fun getServerAddress(): String {
+        return AppSession.get(key = Constants.SERVER_ADDRESS, defaultValue = APP_BASE_URL)?:APP_BASE_URL
     }
 
     fun isLoggedIn(): Boolean {

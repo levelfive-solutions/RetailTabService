@@ -4,6 +4,7 @@ import com.lfsolutions.retail.BuildConfig
 
 object Api {
     const val APP_BASE_URL :String =  BuildConfig.BASE_URL
+    const val APP_TENANT :String =  BuildConfig.TENANT
     const val Base = "api/"
     const val ServicesApp = "services/app/"
     const val CommonLookup = "CommonLookup/"

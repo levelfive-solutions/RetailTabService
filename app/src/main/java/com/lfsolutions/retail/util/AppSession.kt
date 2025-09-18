@@ -50,11 +50,15 @@ class AppSession {
             val printerWidth = AppSession[Constants.PRINTER_WIDTH]
             val characters = getInt(Constants.CHARACTER_PER_LINE, 48)
             val bluetooth = AppSession[Constants.SELECTED_BLUETOOTH]
+            val serverAddress = AppSession[Constants.SERVER_ADDRESS]
+            val tenant = AppSession[Constants.TENANT]
             editor.clear()
             val cleared = editor.commit()
             put(Constants.PRINTER_WIDTH, printerWidth)
             put(Constants.CHARACTER_PER_LINE, characters)
             put(Constants.SELECTED_BLUETOOTH, bluetooth)
+            put(Constants.SERVER_ADDRESS, serverAddress)
+            put(Constants.TENANT, tenant)
             return cleared
         }
 

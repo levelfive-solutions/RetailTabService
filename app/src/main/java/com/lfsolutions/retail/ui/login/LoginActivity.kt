@@ -9,6 +9,7 @@ import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
 import com.google.gson.Gson
 import com.lfsolutions.retail.BuildConfig
+import com.lfsolutions.retail.Main
 import com.lfsolutions.retail.R
 import com.lfsolutions.retail.databinding.ActivityLoginBinding
 import com.lfsolutions.retail.model.LoginRequest
@@ -45,7 +46,9 @@ class LoginActivity : BaseActivity(), OnNetworkResponse {
         /*if (BuildConfig.DEBUG) {
             _binding?.inputServerAddress?.setText("http://rtlconnect.net/MyBossTest/")
         }*/
-        _binding?.inputServerAddress?.setText(APP_BASE_URL)
+        println("ServerAddress:${Main.app.getServerAddress()}")
+        _binding?.inputServerAddress?.setText(Main.app.getServerAddress())
+        _binding?.inputTenant?.setText(Main.app.getTenant())
         _binding?.buttonSignin?.setDebouncedClickListener {
             signIn()
         }
@@ -126,6 +129,8 @@ class LoginActivity : BaseActivity(), OnNetworkResponse {
     override fun onSuccess(call: Call<*>?, response: Response<*>?, tag: Any?) {
         val userSession = response?.body() as UserSession
         AppSession.put(Constants.SESSION, Gson().toJson(userSession))
+        AppSession.put(Constants.SERVER_ADDRESS, _binding?.inputServerAddress?.text.toString().trim())
+        AppSession.put(Constants.TENANT, _binding?.inputTenant?.text.toString().trim())
         AppSession.put(Constants.IS_LOGGED_IN, true)
         Notify.toastLong("Login Success")
         goToHome()

@@ -167,6 +167,8 @@ object Constants {
     const val SESSION: String = "session"
     const val IS_LOGGED_IN: String = "is_logged_in"
     const val baseUrl: String = "base_url"
+    const val SERVER_ADDRESS: String = "server_address"
+    const val TENANT: String = "tenant"
 
     const val PRINT_TYPE_TAX_INVOICE: Int = 2
     const val PRINT_TYPE_RECEIPT: Int = 4

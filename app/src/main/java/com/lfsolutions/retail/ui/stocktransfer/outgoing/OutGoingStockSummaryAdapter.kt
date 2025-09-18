@@ -159,10 +159,11 @@ class OutGoingStockSummaryAdapter(
         }
 
         holder.binding.btnAddSerialNumber.visibility =
-            if (stockTransferProducts?.get(position)?.type.equals("S") || stockTransferProducts?.get(
+            if (stockTransferProducts?.get(position)?.type.equals("S") && stockTransferProducts?.get(
                     position
                 )?.isAsset == true
-            ) View.GONE else View.GONE //View.Visible when isAsset is true
+            ) View.GONE else View.GONE
+        //View.Visible when isAsset is true
 
         holder.binding.btnAddSerialNumber.tag = position
         holder.binding.btnAddSerialNumber.setOnClickListener {
