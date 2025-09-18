@@ -39,6 +39,8 @@ object DateTime {
     const val ServerDateTimeFormat = "yyyy-MM-dd HH:mm:ss"
     const val DateTimePickerFormat = "yyyy-MM-dd'T'HH:mm:ss'Z'"
 
+
+
     fun getFormattedSGTDate(input: String?): String {
         if (input == null) return ""
         val date = getDateFromString(
@@ -201,7 +203,7 @@ object DateTime {
         return sdf.format(Date())
     }
 
-    fun getStartAndEndDate(): Pair<String, String> {
+    /*fun getStartAndEndDate(): Pair<String, String> {
         val isoFormat = SimpleDateFormat("yyyy-MM-dd", Locale.getDefault())
         isoFormat.timeZone = TimeZone.getTimeZone("UTC")
 
@@ -215,7 +217,24 @@ object DateTime {
         val oneMonthBack = isoFormat.format(pastCalendar.time)
 
         return Pair(currentDate, oneMonthBack)
+    }*/
+
+    fun getStartAndEndDate(): Pair<String, String> {
+        val isoFormat = SimpleDateFormat("yyyy-MM-dd", Locale.getDefault())
+        isoFormat.timeZone = TimeZone.getDefault() // ✅ Use device timezone
+
+        // Current date
+        val currentCalendar = Calendar.getInstance()
+        val currentDate = isoFormat.format(currentCalendar.time)
+
+        // One month back
+        val pastCalendar = Calendar.getInstance()
+        pastCalendar.add(Calendar.MONTH, -1)
+        val oneMonthBack = isoFormat.format(pastCalendar.time)
+
+        return Pair(currentDate, oneMonthBack)
     }
+
 
 
     /*fun getStartAndEndDate(): Pair<String, String> {
