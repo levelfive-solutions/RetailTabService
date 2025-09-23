@@ -43,13 +43,22 @@ class Main : Application() {
         return AppSession[Constants.baseUrl]
     }
 
-    fun getTenant(): String {
-        return AppSession.get(key = Constants.TENANT, defaultValue = APP_TENANT)?:APP_TENANT
+    /*fun getTenant(): String {
+        val saved = AppSession[Constants.TENANT, BuildConfig.TENANT]
+        return if (saved.isNullOrEmpty() || saved == "N/A") BuildConfig.TENANT else saved
+        //return AppSession.get(key = Constants.TENANT, defaultValue = APP_TENANT)?:APP_TENANT
     }
 
     fun getServerAddress(): String {
-        return AppSession.get(key = Constants.SERVER_ADDRESS, defaultValue = APP_BASE_URL)?:APP_BASE_URL
-    }
+        val saved = AppSession[Constants.SERVER_ADDRESS, BuildConfig.BASE_URL]
+        return if (saved.isNullOrEmpty() || saved == "N/A") BuildConfig.BASE_URL else saved
+       // return AppSession.get(key = Constants.SERVER_ADDRESS, defaultValue = APP_BASE_URL)?:APP_BASE_URL
+    }*/
+
+    fun getTenant(): String = AppSession.getSafe(Constants.TENANT, BuildConfig.TENANT)
+
+    fun getServerAddress(): String = AppSession.getSafe(Constants.SERVER_ADDRESS, BuildConfig.BASE_URL)
+
 
     fun isLoggedIn(): Boolean {
         return AppSession.getBoolean(Constants.IS_LOGGED_IN)

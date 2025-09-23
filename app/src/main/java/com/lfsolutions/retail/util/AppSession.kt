@@ -1,6 +1,7 @@
 package com.lfsolutions.retail.util
 
 import android.content.Context
+import com.lfsolutions.retail.BuildConfig
 import com.lfsolutions.retail.Main
 
 /**
@@ -45,22 +46,47 @@ class AppSession {
         }
 
         fun clearSharedPref(): Boolean {
-            val editor = Main.app
-                .getSharedPreferences(SHARED_PREFERENCE_NAME, Context.MODE_PRIVATE).edit()
+            val prefs = Main.app.getSharedPreferences(SHARED_PREFERENCE_NAME, Context.MODE_PRIVATE)
+            // 🔹 Backup before clear
             val printerWidth = AppSession[Constants.PRINTER_WIDTH]
             val characters = getInt(Constants.CHARACTER_PER_LINE, 48)
             val bluetooth = AppSession[Constants.SELECTED_BLUETOOTH]
-            val serverAddress = AppSession[Constants.SERVER_ADDRESS]
-            val tenant = AppSession[Constants.TENANT]
+            val serverAddress = AppSession[Constants.SERVER_ADDRESS, BuildConfig.BASE_URL]
+            val tenant = AppSession[Constants.TENANT, BuildConfig.TENANT]
+            // 🔹 Now clear
+            val editor = prefs.edit()
             editor.clear()
             val cleared = editor.commit()
+            // 🔹 Restore
             put(Constants.PRINTER_WIDTH, printerWidth)
             put(Constants.CHARACTER_PER_LINE, characters)
             put(Constants.SELECTED_BLUETOOTH, bluetooth)
             put(Constants.SERVER_ADDRESS, serverAddress)
             put(Constants.TENANT, tenant)
+            //val editor = Main.app.getSharedPreferences(SHARED_PREFERENCE_NAME, Context.MODE_PRIVATE).edit()
+           /* val printerWidth = AppSession[Constants.PRINTER_WIDTH]
+            val characters = getInt(Constants.CHARACTER_PER_LINE, 48)
+            val bluetooth = AppSession[Constants.SELECTED_BLUETOOTH]
+            val serverAddress = AppSession[Constants.SERVER_ADDRESS]
+            val tenant = AppSession[Constants.TENANT]*/
+           /* editor.clear()
+            val cleared = editor.commit()*/
+           /* put(Constants.PRINTER_WIDTH, printerWidth)
+            put(Constants.CHARACTER_PER_LINE, characters)
+            put(Constants.SELECTED_BLUETOOTH, bluetooth)
+            put(Constants.SERVER_ADDRESS, serverAddress)
+            put(Constants.TENANT, tenant)*/
             return cleared
         }
+
+        fun getSafe(key: String, defaultValue: String): String {
+            val value = Main.app
+                .getSharedPreferences(SHARED_PREFERENCE_NAME, Context.MODE_PRIVATE)
+                .getString(key, defaultValue)
+
+            return if (value.isNullOrEmpty() || value == BLANK_STRING_KEY) defaultValue else value
+        }
+
 
         fun put(key: String?, value: Int): Boolean {
             require(!(key == null || key == "")) { WRONG_PAIR }
