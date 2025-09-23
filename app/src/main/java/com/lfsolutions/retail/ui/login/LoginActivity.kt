@@ -8,7 +8,6 @@ import androidx.activity.enableEdgeToEdge
 import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
 import com.google.gson.Gson
-import com.lfsolutions.retail.BuildConfig
 import com.lfsolutions.retail.Main
 import com.lfsolutions.retail.R
 import com.lfsolutions.retail.databinding.ActivityLoginBinding
@@ -20,7 +19,6 @@ import com.lfsolutions.retail.network.NetworkCall
 import com.lfsolutions.retail.network.OnNetworkResponse
 import com.lfsolutions.retail.ui.BaseActivity
 import com.lfsolutions.retail.ui.HomeActivity
-import com.lfsolutions.retail.util.Api.APP_BASE_URL
 import com.lfsolutions.retail.util.AppSession
 import com.lfsolutions.retail.util.Constants
 import com.lfsolutions.retail.util.Loading
@@ -32,6 +30,9 @@ import retrofit2.Response
 class LoginActivity : BaseActivity(), OnNetworkResponse {
 
     private var _binding: ActivityLoginBinding? = null
+    // store validated values in variables
+    var lastValidatedServer = ""
+    var lastValidatedTenant = ""
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -43,10 +44,7 @@ class LoginActivity : BaseActivity(), OnNetworkResponse {
             v.setPadding(systemBars.left, systemBars.top, systemBars.right, systemBars.bottom)
             insets
         }
-        /*if (BuildConfig.DEBUG) {
-            _binding?.inputServerAddress?.setText("http://rtlconnect.net/MyBossTest/")
-        }*/
-        println("ServerAddress:${Main.app.getServerAddress()}")
+         println("ServerAddress:${Main.app.getServerAddress()}")
         _binding?.inputServerAddress?.setText(Main.app.getServerAddress())
         _binding?.inputTenant?.setText(Main.app.getTenant())
         _binding?.buttonSignin?.setDebouncedClickListener {
@@ -76,7 +74,9 @@ class LoginActivity : BaseActivity(), OnNetworkResponse {
     }
 
     private fun prepareNetworkLayer() {
-        AppSession.put(Constants.baseUrl, _binding?.inputServerAddress?.text.toString())
+        AppSession.put(Constants.baseUrl, _binding?.inputServerAddress?.text.toString().trim())
+        AppSession.put(Constants.SERVER_ADDRESS, lastValidatedServer)
+        AppSession.put(Constants.TENANT, lastValidatedTenant)
         Network.clearInstance()
         Network.getInstance()
     }
@@ -103,8 +103,10 @@ class LoginActivity : BaseActivity(), OnNetworkResponse {
             _binding?.inputPassword?.error = "password can't be null or empty"
             return false
         }
-        return true
 
+        lastValidatedServer = _binding?.inputServerAddress?.text.toString().trim()
+        lastValidatedTenant = _binding?.inputTenant?.text.toString().trim()
+        return true
     }
 
     private fun login() {
@@ -129,8 +131,6 @@ class LoginActivity : BaseActivity(), OnNetworkResponse {
     override fun onSuccess(call: Call<*>?, response: Response<*>?, tag: Any?) {
         val userSession = response?.body() as UserSession
         AppSession.put(Constants.SESSION, Gson().toJson(userSession))
-        AppSession.put(Constants.SERVER_ADDRESS, _binding?.inputServerAddress?.text.toString().trim())
-        AppSession.put(Constants.TENANT, _binding?.inputTenant?.text.toString().trim())
         AppSession.put(Constants.IS_LOGGED_IN, true)
         Notify.toastLong("Login Success")
         goToHome()
