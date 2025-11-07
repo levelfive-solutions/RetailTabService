@@ -3,6 +3,11 @@ package com.lfsolutions.retail.ui.delivery.order
 import com.google.gson.annotations.SerializedName
 import com.lfsolutions.retail.Main
 import com.lfsolutions.retail.util.DateTime
+import com.lfsolutions.retail.util.DateTime.getLocalTimeFromUtc
+import com.lfsolutions.retail.util.DateTime.getTimeOnlyFromCreationTime
+import java.text.SimpleDateFormat
+import java.util.Locale
+import java.util.TimeZone
 
 data class DeliveryOrder(
     var creationTime: String? = null,
@@ -65,6 +70,28 @@ data class DeliveryOrder(
         val formatted = DateTime.format(date, DateTime.DateFormatWithDayNameMonthNameAndTime)
         return formatted ?: deliveryDate ?: ""
     }
+
+    fun DeliveryDateFormattedPrint(): String {
+
+        // 1. Get local time from creationTime
+        val localTime = getTimeOnlyFromCreationTime(creationTime)
+
+        // 2. Get only the date part from deliveryDate
+        val datePart = deliveryDate?.substringBefore("T") ?: return ""
+
+       // 3. Parse the datePart
+        val date = DateTime.getDateFromString(
+            datePart,
+            "yyyy-MM-dd"
+        )
+        // 4. Format date only → "EEEE, dd MMM"
+        val formattedDate = DateTime.format(date, "EEEE, dd MMM") ?: ""
+
+        // 5. Append localTime directly
+        return "$formattedDate $localTime"
+    }
+
+
 
     fun statusFormatted(): String {
         return when (status?.trim()) {

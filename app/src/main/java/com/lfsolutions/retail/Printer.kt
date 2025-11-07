@@ -277,7 +277,7 @@ object Printer {
         )
 
         templateText = templateText?.replace(
-            Constants.Delivery.Date, order?.deliveryOrder?.DeliveryDateFormatted()?:""
+            Constants.Delivery.Date, order?.deliveryOrder?.DeliveryDateFormattedPrint()?:""
         )
 
         templateText = templateText?.replace(
