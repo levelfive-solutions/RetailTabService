@@ -62,7 +62,7 @@ class DeliveryOrderDetailsFragment : Fragment() {
         Glide.with(binding.signature).load(order?.deliveryOrder?.signatureUrl()).centerCrop()
             .placeholder(R.drawable.no_image).into(binding.signature)
         binding.orderNo.text = order?.deliveryOrder?.deliveryNo.toString()
-        binding.orderDate.text = order?.deliveryOrder?.DeliveryDateFormatted()
+        binding.orderDate.text = order?.deliveryOrder?.DeliveryDateFormattedPrint()
         binding.status.text = order?.deliveryOrder?.statusFormatted()
         binding.invoiceAmount.text = order?.deliveryOrder?.totalDeliveredQty.toString()
         binding.customer.text = order?.deliveryOrder?.customerName
