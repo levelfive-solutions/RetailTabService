@@ -33,6 +33,7 @@ object DateTime {
     const val DateTimeFormatWOss = "dd/MM/yyyy HH:mm"
     const val DateFormatWithDayName = "EEEE, dd MMM, yyyy"
     const val DateFormatWithDayNameMonthNameAndTime = "EEEE, dd MMM HH:mm"
+    const val DateFormatWithDayNameMonthName = "EEEE, dd MMM"
     const val DateFormatWithMonthNameAndYear = "MMM yyyy"
     const val DateFormatWithDayNameMonthNameAndYear = "EEEE, dd MMM yyyy"
     const val SimpleDateFormat = "dd-MM-yyyy"
@@ -87,6 +88,21 @@ object DateTime {
         }
     }
 
+    fun getLocalTimeFromUtc(input: String?): String {
+        if (input.isNullOrEmpty()) return ""
+
+        // Parse UTC datetime with milliseconds (extra digits allowed)
+        val sdfUtc = SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSS'Z'", Locale.getDefault())
+        sdfUtc.timeZone = TimeZone.getTimeZone("UTC")
+
+        val date = sdfUtc.parse(input) ?: return ""
+
+        // Convert to local timezone
+        val localFormat = SimpleDateFormat("HH:mm:ss", Locale.getDefault())
+        localFormat.timeZone = TimeZone.getDefault()   // DEVICE LOCAL TIME
+
+        return localFormat.format(date)
+    }
 
 
     fun getTimeOnlyFromCreationTime(input: String?): String {

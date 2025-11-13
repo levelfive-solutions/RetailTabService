@@ -68,9 +68,7 @@ class HistoryTypeAdapter(
         }
     }
 
-    fun getSelectedHistoryItem() {
 
-    }
 }
 
 interface OnHistoryTypeClicked {
